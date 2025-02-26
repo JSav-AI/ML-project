@@ -3,12 +3,15 @@ from botocore.exceptions import ClientError
 import os
 import io
 from botocore.config import Config
-from botocore import USINGED 
+from botocore import UNSIGNED 
 
 
 s3 = boto3.client('s3',
-                  region_name = os.getenv('region_name')
-                  config = Config(signature_version=USINGED))
+                  region_name = os.getenv('region_name'),
+                  config = Config(signature_version=UNSIGNED))
+
+bucket_name = os.getenv("BUCKET_NAME")
+
 
 
 def list_s3_file(bucket_name, prefix):
@@ -23,7 +26,7 @@ def download_s3_file(bucket_name, key):
     try:
         response = s3.get_object(Bucket=bucket_name, key=key)
         return response['Body'].read().decode('utf-8')
-    except ClientError as e;
+    except ClientError as e:
         print(f"Error Downloading file from S3: {e}")
         return None
     
